@@ -15,7 +15,7 @@
  */
 
 var Engine = (function(global) {
-    /* Predefine the variables we'll be using within this scope,
+    /* Predefines the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
@@ -69,6 +69,7 @@ var Engine = (function(global) {
         main();
     }
 
+
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
@@ -80,7 +81,34 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    /*This function is called by update to check if our player has collided
+     * with the enemies or other objects.
+     */
+
+    function checkCollisions() {
+
+        /* This loops through the allEnemies array and checks if the player has collided
+         * with the enemy.
+         */
+
+        allEnemies.forEach(function(enemy) {
+
+            enemy.checkCollision(enemy);
+
+        });
+
+        /* This loops through all the allCollectables array and checks if the player has collided
+         * with a collectable.
+         */
+
+        allCollectables.forEach(function(collectable) {
+
+            collectable.collect();
+
+        });
     }
 
     /* This is called by the update function and loops through all of the
@@ -94,6 +122,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+
         player.update();
     }
 
@@ -108,7 +137,7 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
+                'images/grass-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
                 'images/stone-block.png',   // Row 3 of 3 of stone
@@ -132,7 +161,7 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+                ctx.drawImage(Resources.get(rowImages[row]), col * gridWidth, row * gridHeight);
             }
         }
 
@@ -145,21 +174,69 @@ var Engine = (function(global) {
      */
     function renderEntities() {
         /* Loop through all of the objects within the allEnemies array and call
-         * the render function you have defined.
+         * the render function.
          */
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
+        /* Loop through all of the objects within the allCollectables aray and call
+         * the render function.
+         */
+        allCollectables.forEach(function(collectable) {
+            collectable.render();
+        });
+
         player.render();
+        score.render();
+        highScore.render();
+
+        /* This checks if the gameover variable is set to true
+         * and displays the gameover screen when true.
+         */
+
+        if(gameOver)
+         renderGameOverScreen();
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
+    /* This function is called by the render function when the game over state is set to true.
+     * It renders a pop up on the game screen to show the user that the game is over along with the score.
+     * A play again button is also provided to allow the user restart the game easily.
+     */
+
+    function renderGameOverScreen(){
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.fillRect(101, 175, 300, 250);
+
+        ctx.fillStyle = "red";
+        ctx.textAlign = "center";
+        ctx.fillText("Game Over!", canvas.width/2, 210);
+
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Oops! You touched the bug." , canvas.width/2, 260);
+
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Your score is " + score.value, canvas.width/2, 320);
+
+        ctx.fillStyle = "green";
+        ctx.fillRect(160, 360, 180, 40);
+        ctx.font = "18px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText("Play Again", canvas.width/2, 385);
+        ctx.restore();
+    }
+
+    /* This function handles game reset states.
      */
     function reset() {
-        // noop
+
+         player.x = gridWidth*2;
+         player.y = gridHeight *5;
+         score.value = 0;
+         gameOver = false;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -171,13 +248,40 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/star.png',
+        'images/key.png'
     ]);
     Resources.onReady(init);
+
+    /* This listens to click events from the canvas element. All reactions to clicks on an element
+     *  within the canvas is handled within this handler.
+     */
+
+    canvas.addEventListener('click', function(event) {
+
+    /* Get the canvas relative of a click, subtracting the offset from screen since
+    *  the pageX and PageY of the click event object returns the x and y values
+    *  with respect to the viewport */
+
+    var x = event.pageX - canvas.offsetLeft,
+        y = event.pageY - canvas.offsetTop;
+
+        /* Checks if the click is within the bounds of the "play again" button and calls
+         * the reset function to reset the game
+         */
+        if (y > 360 && y < 360 + 40 && x > 160 && x < 160 + 180) {
+            reset();
+        }
+
+    }, false);
 
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developers can use it more easily
      * from within their app.js files.
      */
+
     global.ctx = ctx;
+
+
 })(this);
