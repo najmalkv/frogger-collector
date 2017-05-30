@@ -1,19 +1,21 @@
 # Frogger Collector: A classic arcade game with a twist.
 
-Frogger is a popular arcade game that was developed in th 80's. The object of the game is to direct frogs to their homes one by one by crossing a busy road and navigating a river full of hazards. 
+Frogger is a popular arcade game that was developed in th 80's. The object of the game is to direct frogs to their homes one by one by crossing a busy road and navigating a river full of hazards.
 
-Frogger Collector is a variation from the classic game, where instead of crossing across the player has to collect as many collectables as he can without touching a bug.  Each collectable has different points. The collected points adds up to a score and the highest score is recorded as the highscore. 
+Frogger Collector is a variation from the classic game, where instead of crossing across the player has to collect as many collectables as he can without touching a bug.  Each collectable has different points. The collected points adds up to a score and the highest score is recorded as the highscore.
 
 
 ## How to Run
 
 To run the game open the **index.html** from the root folder in any modern web browser, ie. Chrome, Safari, Firefox or Edge.
 
+You can find the game on my github page [here](https://github.com/najmalkv/frogger-collector).
+
 ## How to Play
 
 *  Move the player using the arrow keys on your keyboard.
 *  Direct the player towards the collectables(star or key) and collect it. When a player lands on the collectable it is considered as collected.
-*  Each collectable has points associated with it, ie. 'star' is 5 points and 'key' is 2 points. 
+*  Each collectable has points associated with it, ie. 'star' is 5 points and 'key' is 2 points.
 * Be careful not to touch the bugs while you are collecting the collectables because as soon as you make contact with the bug its game over.
 * A score is calculated by summing up the points of the collectables you have collected.
 * A round ends when the player touchs a bug.
