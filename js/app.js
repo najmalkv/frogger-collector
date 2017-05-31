@@ -190,7 +190,7 @@ Collectable.prototype.collect = function() {
 
 // Collectable sub class, Predefines the properties of a star collectable
 var Star = function(xLoc, yLoc) {
-    this.sprite = "images/star.png";
+    this.sprite = "images/Star.png";
     this.points = 5;
     Collectable.call(this, xLoc, yLoc);
 };
@@ -212,7 +212,7 @@ Star.prototype.constructor = Collectable;
 // Collectable sub class, Predefines the properties of a key collectable.
 
 var Key = function(xLoc, yLoc) {
-    this.sprite = "images/key.png";
+    this.sprite = "images/Key.png";
     this.points = 2;
     Collectable.call(this, xLoc, yLoc);
 };
